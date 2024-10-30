@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Servicios de Niñera</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      width: 90%;
+      height: 90vh;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .header {
+      text-align: center;
+      padding: 20px;
+      font-size: 24px;
+      background-color: #4CAF50;
+      color: white;
+    }
+    .content {
+      display: flex;
+      flex: 1;
+    }
+    .left, .right {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .left {
+      background-image: url('https://i.postimg.cc/pXhQMbmK/9e44222b-5809-49e8-b271-9620a6013b89.jpg');
+      background-size: cover;
+      flex-direction: column;
+    }
+    .right {
+      background-image: url('https://i.postimg.cc/J4fN16Xv/3b9572b4-722b-47b3-bbf4-85fed375e3a0.jpg');
+      background-size: cover;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .calendar {
+      width: 80%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #333;
+    }
+    .button {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: none;
+      background-size: cover;
+      cursor: pointer;
+      transition: transform 0.3s;
+      animation: pulse 1.5s infinite;
+    }
+    .button:hover {
+      transform: scale(1.1);
+    }
+    .button.registrar {
+      background-image: url('https://i.postimg.cc/vBKcVVRC/5ab4d654-5f7c-476c-b1k34-a830f97f59f7.jpg');
+    }
+    .button.historial {
+      background-image: url('https://i.postimg.cc/7PQ1RYZx/istockphoto-119742818-612x612.jpg');
+    }
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 10px;
+      font-size: 18px;
+    }
+    .days-header, .days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+      margin-top: 10px;
+      width: 100%;
+    }
+    .day, .day-header {
+      text-align: center;
+      padding: 8px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .day-header {
+      font-weight: bold;
+      color: #4CAF50;
+      background-color: #e8f5e9;
+    }
+    .highlighted {
+      background-color: #b3e5fc;
+    }
+    .weekend {
+      background-color: #ffd180;
+    }
+    .orange-highlighted {
+      background-color: #ffa726;
+    }
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    .tooltip {
+      font-size: 14px;
+      color: #75b8e9;
+      margin-bottom: 10px;
+      background: #6e7f58;
+      
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">Servicios de Niñera</div>
+    <div class="content">
+      <div class="left">
+        <div class="calendar">
+          <div class="calendar-header">
+            <button onclick="changeMonth(-1)">&#9664;</button>
+            <span id="calendarTitle"></span>
+            <button onclick="changeMonth(1)">&#9654;</button>
+          </div>
+          <div class="days-header">
+            <div class="day-header">L</div>
+            <div class="day-header">M</div>
+            <div class="day-header">X</div>
+            <div class="day-header">J</div>
+            <div class="day-header">V</div>
+            <div class="day-header">S</div>
+            <div class="day-header">D</div>
+          </div>
+          <div class="days" id="calendarDays"></div>
+        </div>
+      </div>
+      <div class="right">
+        <div class="tooltip">Presiona los botones </div>
+        <button class="button registrar" onclick="selectWeekdays()"></button>
+        <button class="button historial" onclick="selectWeekends()"></button>
+        <a href="https://www.facebook.com/goll.sapk">facebook</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+
+    function renderCalendar() {
+      const calendarTitle = document.getElementById("calendarTitle");
+      const calendarDays = document.getElementById("calendarDays");
+
+      const monthNames = [
+        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+      ];
+      calendarTitle.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+      const firstDay = (new Date(currentYear, currentMonth, 1).getDay() + 6) % 7;
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      
+      calendarDays.innerHTML = "";
+
+      for (let i = 0; i < firstDay; i++) {
+        const emptyDay = document.createElement("div");
+        emptyDay.classList.add("day");
+        calendarDays.appendChild(emptyDay);
+      }
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dayElement = document.createElement("div");
+        dayElement.classList.add("day");
+        dayElement.textContent = day;
+
+        const dayOfWeek = (firstDay + day - 1) % 7;
+        dayElement.dataset.dayOfWeek = dayOfWeek;
+        calendarDays.appendChild(dayElement);
+      }
+    }
+
+    function changeMonth(direction) {
+      currentMonth += direction;
+      if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+      } else if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+      }
+      renderCalendar();
+    }
+
+    function selectWeekdays() {
+      const days = document.querySelectorAll(".day");
+      days.forEach(day => {
+        day.classList.remove("highlighted", "orange-highlighted");
+        const dayNumber = parseInt(day.textContent);
+        if (day.dataset.dayOfWeek >= 0 && day.dataset.dayOfWeek <= 4 && dayNumber > 11) {
+          day.classList.add("highlighted");
+        }
+      });
+    }
+
+    function selectWeekends() {
+      const days = document.querySelectorAll(".day");
+      days.forEach(day => {
+        day.classList.remove("highlighted", "orange-highlighted");
+        const dayNumber = parseInt(day.textContent);
+        if ((day.dataset.dayOfWeek == 5 || day.dataset.dayOfWeek == 6) && dayNumber > 11) {
+          day.classList.add("orange-highlighted");
+        }
+      });
+    }
+
+    renderCalendar();
+  </script>
+</body>
+</html>
+
